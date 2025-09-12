@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="styles.css">
   <title>AI Page</title>
 </head>
 <body>
@@ -8,13 +9,48 @@
   <nav>
     <a href="index.html">Home</a> |
     <a href="projects.html">Projects</a> |
-    <a href="resume.html">Resume</a>    |
-    <a href="services.html">Services</a>    |
-    <a href="AI_Page.html">AI page</a>  
+    <a href="resume.html">Resume</a> |
+    <a href="services.html">Services</a> |
+    <a href="AI_Page.html">AI page</a>
   </nav>
 
   <section>
-    <h2>AI Page</h2>
+    <h1>AI Page</h1>
+    <p><a href = "blackjack cheet sheet.pdf">BlackJack cheat sheet</a></p>
+    <!-- Blackjack Game Starts -->
+    <div id="blackjack-app">
+      <h3>AI Blackjack</h3>
+      <div id="status">Welcome — click Deal to start</div>
+
+      <h4>Dealer</h4>
+      <div id="dealerValue">—</div>
+      <div id="dealerHand"></div>
+
+      <h4>You</h4>
+      <div id="playerValue">—</div>
+      <div id="playerHand"></div>
+
+      <div style="margin-top:10px;">
+        <button id="dealBtn">Deal</button>
+        <button id="hitBtn">Hit</button>
+        <button id="standBtn">Stand</button>
+        <button id="doubleBtn">Double</button>
+        <button id="splitBtn">Split</button>
+        <button id="aiSuggestBtn">AI Suggest</button>
+        <button id="newRoundBtn">New Round</button>
+        <button id="shuffleBtn">Shuffle Deck</button>
+        <button id="insuranceBtn">Insurance</button>
+      </div>
+
+      <p><strong>AI Advisor:</strong> <span id="aiAdvice">—</span></p>
+    </div>
+    <!-- Blackjack Game Ends -->
+
+  </section>
+
+  <section class = chatgpt prompt>
+    <h2>AI Prompt</h2>
+    <p>can you create a ai blackjack game in html/css(it gave me code). Can you intergrate this in my code (I gave it my code so it fits my design and layout). I then asked to add a split and double part. After that code I then asked it to "can you add insurance if dealer has a potential 21 if not then the round keeps playing".</p>
   </section>
 
   <section id="contact">
@@ -22,4 +58,156 @@
     <p>Email: ahadmaknojiya@gmail.com</p>
     <p><a href="https://linkedin.com/in/ahad-maknojiya">LinkedIn</a></p>
   </section>
+
+  <script>
+    (function(){
+      const dealerHandEl = document.getElementById('dealerHand');
+      const playerHandEl = document.getElementById('playerHand');
+      const playerValueEl = document.getElementById('playerValue');
+      const dealerValueEl = document.getElementById('dealerValue');
+      const statusEl = document.getElementById('status');
+      const aiAdviceEl = document.getElementById('aiAdvice');
+
+      const dealBtn = document.getElementById('dealBtn');
+      const hitBtn = document.getElementById('hitBtn');
+      const standBtn = document.getElementById('standBtn');
+      const doubleBtn = document.getElementById('doubleBtn');
+      const splitBtn = document.getElementById('splitBtn');
+      const aiSuggestBtn = document.getElementById('aiSuggestBtn');
+      const newRoundBtn = document.getElementById('newRoundBtn');
+      const shuffleBtn = document.getElementById('shuffleBtn');
+
+      let deck = [], player = [], dealer = [];
+      let splitHands = [];  // stores split hands if split is used
+      let activeHand = 0;   // index of current hand being played
+      let inRound = false, dealerHoleHidden = true;
+
+      function createDeck(){
+        const suits = ['♠','♥','♦','♣'];
+        const ranks = [
+          {r:'A', v:11},{r:'2', v:2},{r:'3', v:3},{r:'4', v:4},
+          {r:'5', v:5},{r:'6', v:6},{r:'7', v:7},{r:'8', v:8},
+          {r:'9', v:9},{r:'10', v:10},{r:'J', v:10},{r:'Q', v:10},{r:'K', v:10}
+        ];
+        const d = [];
+        for(const s of suits){ for(const rk of ranks){ d.push({rank: rk.r, suit: s, value: rk.v}); } }
+        return d;
+      }
+      function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } }
+      function resetDeck(){ deck=createDeck(); shuffle(deck); }
+      function draw(){ if(deck.length===0) resetDeck(); return deck.pop(); }
+      function handTotals(hand){ let total=0, aces=0; for(const c of hand){ total+=c.value; if(c.rank==='A') aces++; } while(total>21&&aces>0){ total-=10; aces--; } return total; }
+      
+      function renderHands(){
+        dealerHandEl.innerHTML=''; playerHandEl.innerHTML='';
+        dealer.forEach((c,i)=> dealerHandEl.innerHTML+= (i===1&&dealerHoleHidden?'[Hidden]':c.rank+c.suit)+' ');
+        if(splitHands.length > 0){
+          playerHandEl.innerHTML = splitHands.map((h,i)=> 
+            (i===activeHand?'👉 ':'') + h.map(c=>c.rank+c.suit).join(' ') + ` (total ${handTotals(h)})`
+          ).join('<br>');
+          playerValueEl.textContent = '';
+        } else {
+          player.forEach(c=> playerHandEl.innerHTML+= c.rank+c.suit+' ');
+          playerValueEl.textContent= handTotals(player);
+        }
+        dealerValueEl.textContent= dealerHoleHidden?(dealer[0]?dealer[0].value+' + ?':'—'):handTotals(dealer);
+      }
+
+      function setStatus(t){ statusEl.textContent=t; }
+      
+      function deal(){ 
+        if(inRound) return; 
+        inRound=true; dealerHoleHidden=true; splitHands=[]; activeHand=0;
+        player=[];dealer=[]; 
+        player.push(draw());dealer.push(draw());player.push(draw());dealer.push(draw()); 
+        renderHands(); 
+        setStatus("Your move"); 
+      }
+
+      function playerHit(){ 
+        if(!inRound) return; 
+        let hand = splitHands.length>0? splitHands[activeHand]: player;
+        hand.push(draw()); renderHands(); 
+        const t=handTotals(hand); 
+        if(t>21){ 
+          setStatus("Bust!"); 
+          nextHandOrDealer(); 
+        } 
+      }
+
+      function dealerPlay(){ 
+        dealerHoleHidden=false; renderHands(); 
+        let t=handTotals(dealer); 
+        while(t<17){ dealer.push(draw()); t=handTotals(dealer); renderHands(); } 
+        return t; 
+      }
+
+      function nextHandOrDealer(){
+        if(splitHands.length>0 && activeHand < splitHands.length-1){
+          activeHand++;
+          setStatus("Now playing split hand "+(activeHand+1));
+          renderHands();
+        } else {
+          // all hands played -> dealer plays
+          const d=dealerPlay();
+          let results=[];
+          const hands = splitHands.length>0? splitHands:[player];
+          for(const h of hands){
+            const p=handTotals(h);
+            if(p>21){ results.push("Lose"); }
+            else if(d>21 || p>d){ results.push("Win"); }
+            else if(p<d){ results.push("Lose"); }
+            else results.push("Push");
+          }
+          setStatus("Results: "+results.join(", "));
+          inRound=false;
+        }
+      }
+
+      function playerStand(){ if(!inRound) return; nextHandOrDealer(); }
+
+      function playerDouble(){
+        if(!inRound) return;
+        let hand = splitHands.length>0? splitHands[activeHand]: player;
+        if(hand.length===2){
+          hand.push(draw());
+          renderHands();
+          setStatus("Double down!");
+          nextHandOrDealer();
+        } else {
+          setStatus("Can only double on first two cards.");
+        }
+      }
+
+      function playerSplit(){
+        if(!inRound) return;
+        if(player.length===2 && player[0].rank===player[1].rank){
+          splitHands=[[player[0]],[player[1]]];
+          splitHands[0].push(draw());
+          splitHands[1].push(draw());
+          activeHand=0;
+          renderHands();
+          setStatus("Split! Playing first hand.");
+        } else {
+          setStatus("Split only allowed on a pair.");
+        }
+      }
+
+      function aiAdvisor(){ 
+        if(!inRound){ aiAdviceEl.textContent="Deal first"; return; } 
+        let hand = splitHands.length>0? splitHands[activeHand]: player;
+        const p=handTotals(hand), dUp=dealer[0].value; 
+        let advice="Stand"; 
+        if(p<=11) advice="Hit"; else if(p>=17) advice="Stand"; else { advice=(dUp>=7? "Hit":"Stand"); } 
+        aiAdviceEl.textContent=advice; 
+      }
+
+      dealBtn.onclick=deal; hitBtn.onclick=playerHit; standBtn.onclick=playerStand; doubleBtn.onclick=playerDouble; splitBtn.onclick=playerSplit; aiSuggestBtn.onclick=aiAdvisor;
+      newRoundBtn.onclick=()=>{ inRound=false; player=[];dealer=[]; splitHands=[]; dealerHoleHidden=true; renderHands(); setStatus("New round ready"); aiAdviceEl.textContent="—"; };
+      shuffleBtn.onclick=()=>{ resetDeck(); setStatus("Deck shuffled"); };
+      resetDeck(); renderHands();
+    })();
+  </script>
+
+</body>
 </html>

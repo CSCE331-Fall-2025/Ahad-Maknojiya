@@ -1,0 +1,44 @@
+nav {
+  background: linear-gradient(lightblue);
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 15px blue;
+}
+
+nav a {
+  color: black;
+  text-decoration: none;
+  margin: 15px;
+  font-weight: 600;
+}
+
+nav a:hover {
+  color: blue;
+  border-bottom: 2px solid blue;
+}
+
+section {
+  background: linear-gradient(lightblue);
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px blue;
+  margin-bottom: 20px;
+  margin-top: 20px;
+
+  max-width: 600px;       
+  margin: 40px auto;      
+  text-align: center;
+}
+
+body{
+  background-image: url(background.jpg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+
+
+
