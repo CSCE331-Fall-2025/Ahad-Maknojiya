@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="styles.css">
+  <link id = "themeStylesheet" rel="stylesheet" href="styles.css">
   <title>AI Page</title>
   <style>
     body{
       zoom: 200%;
     }
+    .theme-toggle {
+      margin: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
+  <button id="themeToggle" class="theme-toggle">Switch to Dark Mode</button>
 
   <nav>
     <a href="index.html">Home</a> |
@@ -213,6 +220,8 @@
       resetDeck(); renderHands();
     })();
   </script>
+
+  <script src="toggle_button.js"></script>
 
 </body>
 </html>

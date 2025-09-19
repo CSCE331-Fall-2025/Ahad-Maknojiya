@@ -1,0 +1,107 @@
+
+body {
+  background: linear-gradient(-45deg, black, black, purple, red);
+  background-size: 400% 400%;
+  animation: symbioteFlow 5s ease infinite;
+  color: white;
+}
+
+@keyframes symbioteFlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+h1, h2, h3 {
+  color: red; 
+  text-shadow: 0 0 8px purple, 0 0 12px red;
+}
+
+
+nav {
+  background-color: black;
+  padding: 10px;
+  text-align: center;
+  border-bottom: 2px solid purple; 
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+nav a:hover {
+  color: red; 
+  text-shadow: 0 0 5px red, 0 0 10px purple;
+}
+
+section {
+  padding: 30px;
+  background-color: rgba(0, 0, 0, 0.85); 
+  margin: 30px auto;
+  border-radius: 12px;
+  max-width: 700px;
+  box-shadow: 0 0 20px rgba(128,0,128,0.6); 
+  text-align: center;
+}
+
+
+section a {
+  color: purple; 
+  font-weight: bold;
+  text-decoration: none;
+}
+
+section a:hover {
+  color: red; 
+  text-decoration: underline;
+}
+
+section p,
+section li {
+  background-color: rgba(20, 0, 20, 0.8);
+  border: 1px solid purple;
+  border-radius: 10px;
+  margin: 15px 0;
+  padding: 15px 20px;
+  text-align: center;
+  font-size: 16px;
+  color: white;
+  box-shadow: 0 0 12px rgba(128, 0, 128, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+section p:hover,
+section li:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 18px red;
+  border-color: red;
+}
+
+section li::before {
+  margin-right: 10px;
+  text-shadow: 0 0 6px purple;
+}
+
+
+
+button.theme-toggle {
+  background-color: black;
+  color: white;
+  border: 2px solid purple;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 6px 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+button.theme-toggle:hover {
+  background-color: red;
+  border-color: red;
+  box-shadow: 0 0 10px purple;
+}
+
+

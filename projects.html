@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="styles.css">
+  <link id = "themeStylesheet" rel="stylesheet" href="styles.css">
   <title>Projects</title>
   <style>
     body{
       zoom: 200%;
     }
+    .theme-toggle {
+      margin: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
+  <button id="themeToggle" class="theme-toggle">Switch to Dark Mode</button>
 
   <nav>
     <a href="index.html">Home</a> |
@@ -53,4 +60,7 @@
     <p>Email: ahadmaknojiya@gmail.com</p>
     <p><a href="https://linkedin.com/in/ahad-maknojiya">LinkedIn</a></p>
   </section>
+
+  <script src="toggle_button.js"></script>
+  
 </html>

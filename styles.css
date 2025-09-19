@@ -39,6 +39,20 @@ body{
   background-size: cover;
 }
 
+button.theme-toggle {
+  background-color: white;
+  border: 2px solid blue;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 6px 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+button.theme-toggle:hover {
+  background-color: blue;
+  border-color: blue;
+  box-shadow: 0 0 10px blue;
+}
 
 
 
